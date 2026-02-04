@@ -1,17 +1,17 @@
 header:
-  - titles:
-      # @start locale config
-      en      : &EN       Memos
-      en-GB   : *EN
-      en-US   : *EN
-      en-CA   : *EN
-      en-AU   : *EN
-      zh-Hans : &ZH_HANS  笔记
-      zh      : *ZH_HANS
-      zh-CN   : *ZH_HANS
-      zh-SG   : *ZH_HANS
-      # @end locale config
-    url: https://memos.ultraji.xyz
+  # - titles:
+  #     # @start locale config
+  #     en      : &EN       Memos
+  #     en-GB   : *EN
+  #     en-US   : *EN
+  #     en-CA   : *EN
+  #     en-AU   : *EN
+  #     zh-Hans : &ZH_HANS  笔记
+  #     zh      : *ZH_HANS
+  #     zh-CN   : *ZH_HANS
+  #     zh-SG   : *ZH_HANS
+  #     # @end locale config
+  #   url: https://memos.ultraji.xyz
 
   - titles:
       # @start locale config
