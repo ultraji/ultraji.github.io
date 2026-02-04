@@ -88,15 +88,15 @@ sources: # bootcdn (default), unpkg
 
 ## => Comments
 ##############################
-giscus:
-  repo:                "ultraji/ultraji.github.io"
-  repo-id:             "MDEwOlJlcG9zaXRvcnkyMTQxODU5MTk="
-  category:            "Announcements"
-  category-id:         "DIC_kwDODMQ3v84CA-G3"
-  mapping:             "pathname"
-  reaction-enabled:    "1"
-  theme:               "light"
-  crossorigin:         "anonymous"
+# giscus:
+#   repo:                "ultraji/ultraji.github.io"
+#   repo-id:             "MDEwOlJlcG9zaXRvcnkyMTQxODU5MTk="
+#   category:            "Announcements"
+#   category-id:         "DIC_kwDODMQ3v84CA-G3"
+#   mapping:             "pathname"
+#   reaction-enabled:    "1"
+#   theme:               "light"
+#   crossorigin:         "anonymous"
 
 ## => Search
 ##############################
