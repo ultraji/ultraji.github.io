@@ -32,6 +32,11 @@
         Powered by <a title="Jekyll is a simple, blog-aware, static site generator." href="http://jekyllrb.com/">Jekyll</a> & <a
         title="TeXt is a super customizable Jekyll theme." href="https://github.com/kitian616/jekyll-TeXt-theme">TeXt Theme</a>.
       </div>
+      {%- if site.icp.enabled -%}
+      <div class="icp-info">
+        <a href="{{ site.icp.url }}" target="_blank" rel="nofollow">{{ site.icp.number }}</a>
+      </div>
+      {%- endif -%}
     </div>
   </div>
 </footer>

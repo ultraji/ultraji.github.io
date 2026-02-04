@@ -35,6 +35,13 @@ author:
   email     : ultraji@live.com
   github    : ultraji
 
+## => ICP Beian (备案信息)
+##############################
+icp:
+  enabled: true
+  number: "浙ICP备2026007268号"  # 请替换为你的实际备案号
+  url: "https://beian.miit.gov.cn/"  # 工信部备案链接
+
 
 ## => GitHub Repository (if the site is hosted by GitHub)
 ##############################
