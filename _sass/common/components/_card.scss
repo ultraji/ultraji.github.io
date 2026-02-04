@@ -1,16 +1,17 @@
+@use "sass:map";
 
 .card {
   max-width: 18rem;
-  border-radius: map-get($base, border-radius);
+  border-radius: map.get($base, border-radius);
   @include box-shadow();
-  @include transition(box-shadow map-get($animation, duration) map-get($animation, timing-function));
+  @include transition(box-shadow map.get($animation, duration) map.get($animation, timing-function));
   & > :first-child {
-    border-top-left-radius: map-get($base, border-radius);
-    border-top-right-radius: map-get($base, border-radius);
+    border-top-left-radius: map.get($base, border-radius);
+    border-top-right-radius: map.get($base, border-radius);
   }
   & > :last-child {
-    border-bottom-right-radius: map-get($base, border-radius);
-    border-bottom-left-radius: map-get($base, border-radius);
+    border-bottom-right-radius: map.get($base, border-radius);
+    border-bottom-left-radius: map.get($base, border-radius);
   }
 }
 
@@ -21,7 +22,7 @@
 }
 
 .card__content {
-  padding: map-get($spacers, 2) map-get($spacers, 3);
+  padding: map.get($spacers, 2) map.get($spacers, 3);
 }
 
 .card__header, .card__header > a {
@@ -41,7 +42,7 @@
     position: absolute;
     width: 100%;
     max-height: 100%;
-    padding: map-get($spacers, 2);
+    padding: map.get($spacers, 2);
     a {
       text-decoration: none !important;
     }
@@ -86,14 +87,14 @@
       }
     }
   }
-  @include transition(map-get($clickable, transition));
+  @include transition(map.get($clickable, transition));
 }
 
 .card--flat {
   @include box-shadow(0);
   .card__image {
     & > img {
-      border-radius: map-get($base, border-radius);
+      border-radius: map.get($base, border-radius);
     }
   }
   .card__content {

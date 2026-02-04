@@ -1,19 +1,20 @@
+@use "sass:map";
 .image {
   max-width: 100%;
   @extend .image--md;
 }
 .image--md {
-  width: map-get($image, width);
+  width: map.get($image, width);
 }
 .image--xl {
-  width: map-get($image, width-xl);
+  width: map.get($image, width-xl);
 }
 .image--lg {
-  width: map-get($image, width-lg);
+  width: map.get($image, width-lg);
 }
 .image--sm {
-  width: map-get($image, width-sm);
+  width: map.get($image, width-sm);
 }
 .image--xs {
-  width: map-get($image, width-xs);
+  width: map.get($image, width-xs);
 }

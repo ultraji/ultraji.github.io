@@ -1,3 +1,4 @@
+@use "sass:map";
 .swiper {
   position: relative;
   @include overflow(hidden);
@@ -13,7 +14,7 @@
 }
 
 .swiper__wrapper--animation {
-  @include transition(transform map-get($animation, duration) map-get($animation, timing-function));
+  @include transition(transform map.get($animation, duration) map.get($animation, timing-function));
 }
 
 .swiper__slide {

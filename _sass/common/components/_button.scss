@@ -1,6 +1,7 @@
+@use "sass:map";
 @mixin button() {
   display: inline-block;
-  font-weight: map-get($button, font-weight);
+  font-weight: map.get($button, font-weight);
   line-height: 1 !important;
   text-decoration: none !important;
   cursor: pointer;
@@ -100,12 +101,12 @@
 }
 
 .button--pill {
-  border-radius: map-get($button, pill-radius);
+  border-radius: map.get($button, pill-radius);
   @extend .button--md;
 }
 
 .button--rounded {
-  border-radius: map-get($base, border-radius);
+  border-radius: map.get($base, border-radius);
   @extend .button--md;
 }
 
@@ -118,46 +119,46 @@
 }
 
 .button--md {
-  padding: map-get($button, padding-y) map-get($button, padding-x);
-  font-size: map-get($base, font-size);
+  padding: map.get($button, padding-y) map.get($button, padding-x);
+  font-size: map.get($base, font-size);
   &.button--circle {
-    width: map-get($button, circle-diameter);
-    height: map-get($button, circle-diameter);
+    width: map.get($button, circle-diameter);
+    height: map.get($button, circle-diameter);
   }
 }
 
 .button--xs {
-  padding: map-get($button, padding-y-xs) map-get($button, padding-x-xs);
-  font-size: map-get($base, font-size-xs);
+  padding: map.get($button, padding-y-xs) map.get($button, padding-x-xs);
+  font-size: map.get($base, font-size-xs);
   &.button--circle {
-    width: map-get($button, circle-diameter-xs);
-    height: map-get($button, circle-diameter-xs);
+    width: map.get($button, circle-diameter-xs);
+    height: map.get($button, circle-diameter-xs);
   }
 }
 
 .button--sm {
-  padding: map-get($button, padding-y-sm) map-get($button, padding-x-sm);
-  font-size: map-get($base, font-size-sm);
+  padding: map.get($button, padding-y-sm) map.get($button, padding-x-sm);
+  font-size: map.get($base, font-size-sm);
   &.button--circle {
-    width: map-get($button, circle-diameter-sm);
-    height: map-get($button, circle-diameter-sm);
+    width: map.get($button, circle-diameter-sm);
+    height: map.get($button, circle-diameter-sm);
   }
 }
 
 .button--lg {
-  padding: map-get($button, padding-y-lg) map-get($button, padding-x-lg);
-  font-size: map-get($base, font-size-lg);
+  padding: map.get($button, padding-y-lg) map.get($button, padding-x-lg);
+  font-size: map.get($base, font-size-lg);
   &.button--circle {
-    width: map-get($button, circle-diameter-lg);
-    height: map-get($button, circle-diameter-lg);
+    width: map.get($button, circle-diameter-lg);
+    height: map.get($button, circle-diameter-lg);
   }
 }
 
 .button--xl {
-  padding: map-get($button, padding-y-xl) map-get($button, padding-x-xl);
-  font-size: map-get($base, font-size-xl);
+  padding: map.get($button, padding-y-xl) map.get($button, padding-x-xl);
+  font-size: map.get($base, font-size-xl);
   &.button--circle {
-    width: map-get($button, circle-diameter-xl);
-    height: map-get($button, circle-diameter-xl);
+    width: map.get($button, circle-diameter-xl);
+    height: map.get($button, circle-diameter-xl);
   }
 }

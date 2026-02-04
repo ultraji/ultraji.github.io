@@ -1,5 +1,8 @@
+@use "sass:color";
+@use "sass:map";
+
 @function get-color-theme($color) {
-  @if lightness($color) < 15% {
+  @if color.channel($color, "lightness", $space: hsl) < 15% {
     @return "dark";
   } @else {
     @return "light";
@@ -10,6 +13,9 @@
   @if $breakpoints == default {
     $breakpoints: $responsive;
   }
-  $min: map-get($breakpoints, $name);
-  @return if($min != 0, "#{$name}-", "");
+  $min: map.get($breakpoints, $name);
+  @if $min != 0 {
+    @return "#{$name}-";
+  }
+  @return "";
 }

@@ -1,3 +1,6 @@
+@use "sass:map";
+@use "sass:math";
+
 $base: (
   font-family:            (-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif),
   font-family-code:       (Menlo, Monaco, Consolas, Andale Mono, lucida console, Courier New, monospace),
@@ -64,11 +67,11 @@ $base: (
 
 $spacers: (
   0:                      0,
-  1:                      map-get($base, spacer) * .25,
-  2:                      map-get($base, spacer) * .5,
-  3:                      map-get($base, spacer),
-  4:                      map-get($base, spacer) * 1.5,
-  5:                      map-get($base, spacer) * 3
+  1:                      map.get($base, spacer) * .25,
+  2:                      map.get($base, spacer) * .5,
+  3:                      map.get($base, spacer),
+  4:                      map.get($base, spacer) * 1.5,
+  5:                      map.get($base, spacer) * 3
 );
 
 $z-indexes: (
@@ -114,16 +117,16 @@ $button-height-sm:        1.5rem;
 $button-height-xs:        1.2rem;
 
 $button: (
-  padding-y-xl:           ($button-height-xl - map-get($base, font-size-xl)) / 2,
-  padding-x-xl:           $button-height-xl / 3,
-  padding-y-lg:           ($button-height-lg - map-get($base, font-size-lg)) / 2,
-  padding-x-lg:           $button-height-lg / 3,
-  padding-y:              ($button-height - map-get($base, font-size)) / 2,
-  padding-x:              $button-height / 3,
-  padding-y-sm:           ($button-height-sm - map-get($base, font-size-sm)) / 2,
-  padding-x-sm:           $button-height-sm / 3,
-  padding-y-xs:           ($button-height-xs - map-get($base, font-size-xs)) / 2,
-  padding-x-xs:           $button-height-xs / 3,
+  padding-y-xl:           math.div($button-height-xl - map.get($base, font-size-xl), 2),
+  padding-x-xl:           math.div($button-height-xl, 3),
+  padding-y-lg:           math.div($button-height-lg - map.get($base, font-size-lg), 2),
+  padding-x-lg:           math.div($button-height-lg, 3),
+  padding-y:              math.div($button-height - map.get($base, font-size), 2),
+  padding-x:              math.div($button-height, 3),
+  padding-y-sm:           math.div($button-height-sm - map.get($base, font-size-sm), 2),
+  padding-x-sm:           math.div($button-height-sm, 3),
+  padding-y-xs:           math.div($button-height-xs - map.get($base, font-size-xs), 2),
+  padding-x-xs:           math.div($button-height-xs, 3),
 
   pill-radius:            6rem,
 
@@ -133,7 +136,7 @@ $button: (
   circle-diameter-sm:     $button-height-sm,
   circle-diameter-xs:     $button-height-xs,
 
-  font-weight:            map-get($base, font-weight-bold)
+  font-weight:            map.get($base, font-weight-bold)
 );
 
 $image: (

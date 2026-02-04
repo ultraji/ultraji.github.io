@@ -1,3 +1,6 @@
+@use "sass:color";
+@use "sass:map";
+
 @mixin clickable($clr, $bg-clr, $hover-clr: default, $hover-bg-clr: default, $active-clr: default, $active-bg-clr: default, $focus-clr: default, $focus-bg-clr: default, $theme: default, $ignore-path: default) {
 
   @if $theme == default {
@@ -22,11 +25,11 @@
     $ignore-path: true;
   }
 
-  @include transition(map-get($clickable, transition));
+  @include transition(map.get($clickable, transition));
   @if $ignore-path == false {
     svg {
       path {
-        @include transition(map-get($clickable, transition));
+        @include transition(map.get($clickable, transition));
       }
     }
   }
@@ -35,10 +38,10 @@
   @if $hover-clr == default {
     @if $hover-bg-clr == null {
       @if $theme == "light" {
-        $hover-clr: darken($clr, 14%);
+        $hover-clr: color.scale($clr, $lightness: -14%);
       }
       @if $theme == "dark" {
-        $hover-clr: lighten($clr, 18%);
+        $hover-clr: color.scale($clr, $lightness: 18%);
       }
     } @else if $hover-bg-clr == default {
       $hover-clr: $clr;
@@ -47,10 +50,10 @@
 
   @if $hover-bg-clr == default {
     @if $theme == "light" {
-      $hover-bg-clr: darken($bg-clr, 14%);
+      $hover-bg-clr: color.scale($bg-clr, $lightness: -14%);
     }
     @if $theme == "dark" {
-      $hover-bg-clr: lighten($bg-clr, 18%);
+      $hover-bg-clr: color.scale($bg-clr, $lightness: 18%);
     }
   }
 
@@ -58,10 +61,10 @@
   @if $active-clr == default {
     @if $active-bg-clr == null {
       @if $theme == "light" {
-        $active-clr: darken($hover-clr, 15%);
+        $active-clr: color.scale($hover-clr, $lightness: -15%);
       }
       @if $theme == "dark" {
-        $active-clr: lighten($hover-clr, 16%);
+        $active-clr: color.scale($hover-clr, $lightness: 16%);
       }
     } @else if $active-bg-clr == default {
       $active-clr: $hover-clr;
@@ -70,10 +73,10 @@
 
   @if $active-bg-clr == default {
     @if $theme == "light" {
-      $active-bg-clr: darken($hover-bg-clr, 15%);
+      $active-bg-clr: color.scale($hover-bg-clr, $lightness: -15%);
     }
     @if $theme == "dark" {
-      $active-bg-clr: lighten($hover-bg-clr, 16%);
+      $active-bg-clr: color.scale($hover-bg-clr, $lightness: 16%);
     }
   }
 

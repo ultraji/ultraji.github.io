@@ -1,5 +1,6 @@
+@use "sass:map";
 .article__info {
-  font-size: map-get($base, font-size-sm);
+  font-size: map.get($base, font-size-sm);
   color: $text-color-l;
   .left-col {
     float: left;
@@ -9,16 +10,16 @@
   }
   .right-col {
     float: right;
-    margin-left: map-get($button, padding-x-sm);
+    margin-left: map.get($button, padding-x-sm);
     @include media-breakpoint-down(md) {
       float: none;
     }
     & > li {
       &:not(:last-child) {
         @include split-line(right, default, $text-color-l);
-        padding-right: map-get($spacers, 2);
-        margin-right: map-get($spacers, 2);
-        line-height: map-get($base, line-height-xs);
+        padding-right: map.get($spacers, 2);
+        margin-right: map.get($spacers, 2);
+        line-height: map.get($base, line-height-xs);
       }
     }
   }

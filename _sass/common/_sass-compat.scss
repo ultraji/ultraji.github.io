@@ -1,0 +1,28 @@
+@use "sass:color";
+@use "sass:map";
+@use "sass:math";
+
+// Compatibility shims for deprecated global built-in functions.
+@function map-get($map-value, $key) {
+  @return map.get($map-value, $key);
+}
+
+@function mix($color1, $color2, $weight: 50%) {
+  @return color.mix($color1, $color2, $weight);
+}
+
+@function lightness($color-value) {
+  @return color.channel($color-value, "lightness", $space: hsl);
+}
+
+@function darken($color-value, $amount) {
+  @return color.scale($color-value, $lightness: -$amount);
+}
+
+@function lighten($color-value, $amount) {
+  @return color.scale($color-value, $lightness: $amount);
+}
+
+@function div($numerator, $denominator) {
+  @return math.div($numerator, $denominator);
+}

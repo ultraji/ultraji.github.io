@@ -1,10 +1,11 @@
+@use "sass:map";
 @mixin horizontal-rules() {
   &::before {
     display: block;
-    font-size: map-get($base, font-size-h2);
+    font-size: map.get($base, font-size-h2);
     color: $text-color-l;
     text-align: center;
-    letter-spacing: map-get($spacers, 4);
+    letter-spacing: map.get($spacers, 4);
     content: "...";
   }
 }

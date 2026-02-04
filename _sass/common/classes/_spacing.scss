@@ -1,3 +1,4 @@
+@use "sass:map";
 @mixin make-spacing($property, $side, $spacer, $negative: false) {
 
   $css_property: null;
@@ -41,15 +42,15 @@
     } @else {
       @if ($side == "") {
         @if ($negative == true) {
-          #{$css_property}: - map-get($spacers, $spacer);
+          #{$css_property}: - map.get($spacers, $spacer);
         } @else {
-          #{$css_property}: map-get($spacers, $spacer);
+          #{$css_property}: map.get($spacers, $spacer);
         }
       } @else {
         @if ($negative == true) {
-          #{$css_property}-#{$side}: - map-get($spacers, $spacer);
+          #{$css_property}-#{$side}: - map.get($spacers, $spacer);
         } @else {
-          #{$css_property}-#{$side}: map-get($spacers, $spacer);
+          #{$css_property}-#{$side}: map.get($spacers, $spacer);
         }
       }
     }

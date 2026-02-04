@@ -1,12 +1,13 @@
+@use "sass:map";
 .article__section-navigator {
-  padding-top: map-get($spacers, 3);
-  margin: map-get($spacers, 4) 0 map-get($spacers, 3) 0;
+  padding-top: map.get($spacers, 3);
+  margin: map.get($spacers, 4) 0 map.get($spacers, 3) 0;
   word-wrap: break-word;
   @include split-line(top, 4px);
   & > .previous, & > .next {
     width: 50%;
     & > span {
-      font-weight: map-get($base, font-weight-bold);
+      font-weight: map.get($base, font-weight-bold);
       color: $text-color-l;
     }
     & > a {
@@ -16,11 +17,11 @@
   }
   & > .previous {
     float: left;
-    padding-right: map-get($spacers, 2);
+    padding-right: map.get($spacers, 2);
   }
   & > .next {
     float: right;
-    padding-left: map-get($spacers, 2);
+    padding-left: map.get($spacers, 2);
     text-align: right;
   }
 }

@@ -1,6 +1,7 @@
+@use "sass:map";
 .article__footer {
-  margin: map-get($spacers, 4) 0;
-  font-size: map-get($base, font-size-sm);
+  margin: map.get($spacers, 4) 0;
+  font-size: map.get($base, font-size-sm);
 }
 
 .article__license, .article__subscribe {
@@ -12,6 +13,6 @@
 .article__license {
   color: $text-color-l;
   img {
-    height: map-get($base, font-size) * 1.6;
+    height: map.get($base, font-size) * 1.6;
   }
 }

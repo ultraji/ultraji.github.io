@@ -1,3 +1,5 @@
+@use "sass:map";
+
 .article__content {
   img.shadow, .shadow > img {
     @include box-shadow();
@@ -8,7 +10,7 @@
   }
 
   img.rounded, .rounded > img {
-    border-radius: map-get($base, border-radius);
+    border-radius: map.get($base, border-radius);
   }
 
   img.circle, .circle > img {

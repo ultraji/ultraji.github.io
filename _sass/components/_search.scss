@@ -1,11 +1,12 @@
+@use "sass:map";
 .search {
   @include overflow(auto);
 
 }
 .search--google-custom-search-engine {
   .main {
-    padding-top: map-get($spacers, 4);
-    padding-bottom: map-get($spacers, 4);
+    padding-top: map.get($spacers, 4);
+    padding-bottom: map.get($spacers, 4);
     @include media-breakpoint-down(md) {
       position: absolute;
       padding: 0;
@@ -14,9 +15,9 @@
 }
 
 .search__header {
-  margin-top: map-get($spacers, 4);
-  font-size: map-get($base, font-size-h1);
-  font-weight: map-get($base, font-weight-bold);
+  margin-top: map.get($spacers, 4);
+  font-size: map.get($base, font-size-h1);
+  font-weight: map.get($base, font-weight-bold);
   color: $text-color-d;
   .search--light & {
     color: $text-color-theme-light-d;
@@ -31,7 +32,7 @@
 
 .search-bar {
   @include flexbox();
-  margin: map-get($spacers, 3) 0 map-get($spacers, 4) 0;
+  margin: map.get($spacers, 3) 0 map.get($spacers, 4) 0;
 }
 
 .search-box {
@@ -52,9 +53,9 @@
     color: $text-color;
     background-color: transparent;
     border: 2px solid $border-color;
-    border-radius: map-get($button, pill-radius);
+    border-radius: map.get($button, pill-radius);
     -webkit-appearance: none; /* fix iOS don't display box-shadow properly */
-    @include transition(box-shadow map-get($animation, duration) map-get($animation, timing-function));
+    @include transition(box-shadow map.get($animation, duration) map.get($animation, timing-function));
     @include focus {
       box-shadow: 0 0 0 2px rgba($border-color, .4);
     }
@@ -117,21 +118,21 @@
 }
 
 .search__cancel {
-  margin-left: map-get($spacers, 2);
-  font-weight: map-get($base, font-weight-bold);
+  margin-left: map.get($spacers, 2);
+  font-weight: map.get($base, font-weight-bold);
   white-space: nowrap;
 }
 
 .search-result {
-  margin: map-get($spacers, 4) 0;
-  font-size: map-get($base, font-size-sm);
-  line-height: map-get($base, line-height-sm);
+  margin: map.get($spacers, 4) 0;
+  font-size: map.get($base, font-size-sm);
+  line-height: map.get($base, line-height-sm);
 }
 
 .search-result__header {
-  margin: map-get($spacers, 3) 0 map-get($spacers, 2) 0;
-  font-size: map-get($base, font-size-lg);
-  font-weight: map-get($base, font-weight-bold);
+  margin: map.get($spacers, 3) 0 map.get($spacers, 2) 0;
+  font-size: map.get($base, font-size-lg);
+  font-weight: map.get($base, font-weight-bold);
   color: $text-color-l;
   text-transform: uppercase;
   .search--light & {
@@ -145,7 +146,7 @@
 .search-result__item {
   list-style-type: none;
   a {
-    padding: map-get($spacers, 1) map-get($spacers, 3);
+    padding: map.get($spacers, 1) map.get($spacers, 3);
     @include transition(none);
     @include clickable($text-color, transparent, $text-color-3, $main-color-3);
     .search--light & {
@@ -170,7 +171,7 @@
         }
       }
       @include active() {
-        @include transition(map-get($clickable, transition));
+        @include transition(map.get($clickable, transition));
       }
     }
   }
