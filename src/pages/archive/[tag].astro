@@ -1,0 +1,219 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Header from '../../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	const tags = new Set<string>();
+	
+	posts.forEach((post) => {
+		post.data.tags?.forEach((tag) => {
+			tags.add(tag);
+		});
+	});
+
+	return Array.from(tags).map((tag) => ({
+		params: { tag: encodeURIComponent(tag) },
+		props: { tag },
+	}));
+}
+
+interface Props {
+	tag: string;
+}
+
+const { tag } = Astro.props;
+const decodedTag = decodeURIComponent(tag);
+
+const allPosts = await getCollection('blog');
+const posts = allPosts
+	.filter((post) => post.data.tags?.includes(decodedTag))
+	.sort((a, b) => (b.data.pubDate?.valueOf?.() ?? 0) - (a.data.pubDate?.valueOf?.() ?? 0));
+
+// Group posts by year
+const postsByYear = posts.reduce((acc, post) => {
+	const year = post.data.pubDate?.getFullYear?.() || new Date().getFullYear();
+	if (!acc[year]) {
+		acc[year] = [];
+	}
+	acc[year].push(post);
+	return acc;
+}, {});
+
+const years = Object.keys(postsByYear)
+	.map(Number)
+	.sort((a, b) => b - a);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`标签: ${decodedTag} - ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+		<style>
+			main {
+				width: 720px;
+				max-width: calc(100% - 2em);
+				margin: 0 auto;
+				padding: 1em;
+			}
+			.header {
+				text-align: center;
+				margin-bottom: 2em;
+			}
+			h1 {
+				margin: 0 0 0.5em 0;
+			}
+			.back-link {
+				display: inline-block;
+				margin-top: 1em;
+				color: rgb(var(--accent));
+				text-decoration: none;
+				transition: color 0.2s ease;
+			}
+			.back-link:hover {
+				text-decoration: underline;
+			}
+			.post-count {
+				color: rgb(var(--gray));
+				font-size: 0.9rem;
+			}
+			.year-section {
+				margin-bottom: 2em;
+			}
+			.year-header {
+				font-size: 1.5rem;
+				font-weight: bold;
+				margin-bottom: 1em;
+				padding-bottom: 0.5em;
+				border-bottom: 2px solid rgb(var(--gray));
+			}
+			.post-item {
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-start;
+				gap: 1rem;
+				padding: 0.75rem 0;
+				border-bottom: 1px solid rgba(var(--gray), 0.2);
+			}
+			.post-item:last-child {
+				border-bottom: none;
+			}
+			.post-title {
+				flex: 1;
+				margin: 0;
+				color: rgb(var(--black));
+			}
+			.post-title a {
+				text-decoration: none;
+				color: rgb(var(--black));
+				transition: color 0.2s ease;
+			}
+			.post-title a:hover {
+				color: rgb(var(--accent));
+			}
+			.post-meta {
+				display: flex;
+				flex-direction: column;
+				gap: 0.5rem;
+				text-align: right;
+				font-size: 0.85rem;
+				color: rgb(var(--gray));
+				white-space: nowrap;
+			}
+			.post-date {
+				font-size: 0.85rem;
+				color: rgb(var(--gray));
+			}
+			.post-tags {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.25rem;
+				justify-content: flex-end;
+			}
+			.post-tag {
+				padding: 0.1rem 0.35rem;
+				border-radius: 999px;
+				background: rgba(var(--gray-light), 0.4);
+				font-size: 0.75rem;
+				font-weight: bold;
+			}
+			.post-tag a {
+				text-decoration: none;
+				color: rgb(var(--gray));
+				transition: color 0.2s ease;
+			}
+			.post-tag a:hover {
+				color: rgb(var(--accent));
+			}
+			.post-tag.current {
+				background: rgba(var(--accent), 0.2);
+			}
+			.post-tag.current a {
+				color: rgb(var(--accent));
+				font-weight: bold;
+			}
+			@media (max-width: 720px) {
+				.post-item {
+					flex-direction: column;
+					gap: 0.5rem;
+				}
+				.post-meta {
+					text-align: left;
+				}
+				.post-tags {
+					justify-content: flex-start;
+				}
+			}
+		</style>
+	</head>
+
+	<body>
+		<Header />
+		<main>
+			<div class="header">
+				<h1>标签: {decodedTag}</h1>
+				<p class="post-count">共 {posts.length} 篇文章</p>
+			</div>
+
+			{posts.length === 0 ? (
+				<p style="text-align: center; color: rgb(var(--gray));">此标签下暂无文章</p>
+			) : (
+				years.map((year) => (
+					<div class="year-section">
+						<div class="year-header">{year}</div>
+						{postsByYear[year].map((post) => (
+							<div class="post-item">
+								<h3 class="post-title">
+									<a href={`/blog/${post.data.postId}.html`}>{post.data.title}</a>
+								</h3>
+								<div class="post-meta">
+									{post.data.pubDate && (
+										<div class="post-date">
+											<FormattedDate date={post.data.pubDate} />
+										</div>
+									)}
+									{post.data.tags?.length > 0 && (
+										<div class="post-tags">
+											{post.data.tags.map((t) => (
+												<span class={`post-tag ${t === decodedTag ? 'current' : ''}`}>
+													<a href={`/archive/${encodeURIComponent(t)}`}>#{t}</a>
+												</span>
+											))}
+										</div>
+									)}
+								</div>
+							</div>
+						))}
+					</div>
+				))
+			)}
+
+			<a href="/archive" class="back-link">← 返回归档</a>
+		</main>
+		<Footer />
+	</body>
+</html>

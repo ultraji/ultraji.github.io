@@ -1,0 +1,273 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Header from '../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => (b.data.pubDate?.valueOf?.() ?? 0) - (a.data.pubDate?.valueOf?.() ?? 0),
+);
+
+const postsByYear = posts.reduce<Record<string, typeof posts>>((acc, post) => {
+	const year = String(post.data.pubDate?.getFullYear?.() ?? new Date().getFullYear());
+	if (!acc[year]) acc[year] = [];
+	acc[year].push(post);
+	return acc;
+}, {});
+
+const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
+
+// Collect all tags
+const allTags = new Set<string>();
+posts.forEach((post) => {
+	post.data.tags?.forEach((tag) => {
+		allTags.add(tag);
+	});
+});
+const tagList = Array.from(allTags).sort();
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`归档 - ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+		<style>
+			main {
+				width: var(--content-width);
+				max-width: var(--content-max-width);
+				margin: 0 auto;
+				padding: 1em;
+			}
+			.tags-filter {
+				margin-bottom: 2em;
+				padding: 1.5em;
+				background: rgba(var(--gray-light), 0.1);
+				border-radius: 8px;
+			}
+			.tags-filter-label {
+				font-size: 0.9rem;
+				color: rgb(var(--gray));
+				margin-bottom: 0.75em;
+				display: block;
+				font-weight: bold;
+			}
+			.tags-list {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5rem;
+			}
+			.tag-filter {
+				padding: 0.4rem 0.75rem;
+				border-radius: 999px;
+				background: white;
+				border: 1px solid rgb(var(--gray));
+				color: rgb(var(--gray));
+				text-decoration: none;
+				cursor: pointer;
+				transition: all 0.2s ease;
+				font-size: 0.85rem;
+				font-weight: bold;
+				display: inline-block;
+			}
+			.tag-filter:hover {
+				background: rgb(var(--gray));
+				color: white;
+			}
+			.tag-filter.active {
+				background: rgb(var(--accent));
+				border-color: rgb(var(--accent));
+				color: white;
+			}
+			.clear-filter {
+				padding: 0.4rem 0.75rem;
+				border-radius: 999px;
+				background: white;
+				border: 1px solid rgb(var(--gray));
+				color: rgb(var(--gray));
+				text-decoration: none;
+				cursor: pointer;
+				transition: all 0.2s ease;
+				font-size: 0.85rem;
+				font-weight: bold;
+				display: inline-block;
+			}
+			.clear-filter:hover {
+				background: rgb(var(--gray));
+				color: white;
+			}
+			.year-section {
+				margin-bottom: 2em;
+			}
+			.year-header {
+				font-size: 1.5rem;
+				font-weight: bold;
+				margin-bottom: 1em;
+				padding-bottom: 0.5em;
+				border-bottom: 2px solid rgb(var(--gray));
+			}
+			.post-item {
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-start;
+				gap: 1rem;
+				padding: 0.75rem 0;
+				border-bottom: 1px solid rgba(var(--gray), 0.2);
+			}
+			.post-item:last-child {
+				border-bottom: none;
+			}
+			.post-item.hidden {
+				display: none;
+			}
+			.post-title {
+				flex: 1;
+				margin: 0;
+				font-size: 1rem;
+				color: rgb(var(--black));
+			}
+			.post-title a {
+				text-decoration: none;
+				color: rgb(var(--black));
+				transition: color 0.2s ease;
+			}
+			.post-title a:hover {
+				color: rgb(var(--accent));
+			}
+			.post-meta {
+				display: flex;
+				flex-direction: column;
+				gap: 0.5rem;
+				text-align: right;
+				font-size: 0.85rem;
+				color: rgb(var(--gray));
+				white-space: nowrap;
+			}
+			.post-date {
+				font-size: 0.85rem;
+				color: rgb(var(--gray));
+			}
+			.year-section.hidden {
+				display: none;
+			}
+			.no-results {
+				text-align: center;
+				color: rgb(var(--gray));
+				padding: 2em;
+			}
+			@media (max-width: 720px) {
+				.post-item {
+					flex-direction: column;
+					gap: 0.5rem;
+				}
+				.post-meta {
+					text-align: left;
+				}
+			}
+		</style>
+	</head>
+
+	<body>
+		<Header />
+		<main>
+			<div class="tags-filter">
+				<label class="tags-filter-label">筛选标签</label>
+				<div class="tags-list" id="tagsList">
+					<button class="clear-filter" id="clearBtn" style="display: none;">✕ 清除筛选</button>
+					{tagList.map((tag) => (
+						<button class="tag-filter" data-tag={tag}>
+							#{tag}
+						</button>
+					))}
+				</div>
+			</div>
+
+			<div id="postsContainer">
+				{years.map((year) => (
+					<div class="year-section" data-year={year}>
+						<div class="year-header">{year}</div>
+						<div class="posts-in-year">
+							{postsByYear[year].map((post) => (
+								<div class="post-item" data-tags={post.data.tags?.join(',')}>
+									<h3 class="post-title">
+										<a href={`/blog/${post.data.postId}.html`}>{post.data.title}</a>
+									</h3>
+									<div class="post-meta">
+										{post.data.pubDate && (
+											<div class="post-date">
+												<FormattedDate date={post.data.pubDate} />
+											</div>
+										)}
+									</div>
+								</div>
+							))}
+						</div>
+					</div>
+				))}
+			</div>
+
+			<div class="no-results" id="noResults" style="display: none;">
+				此筛选条件下暂无文章
+			</div>
+		</main>
+		<Footer />
+
+		<script>
+			const tagButtons = document.querySelectorAll('.tag-filter[data-tag]');
+			const clearBtn = document.getElementById('clearBtn');
+			const postItems = document.querySelectorAll('.post-item');
+			const yearSections = document.querySelectorAll('.year-section');
+			const noResults = document.getElementById('noResults');
+			let selectedTag = null;
+
+			function filterPosts() {
+				let visibleCount = 0;
+				let visibleYears = new Set();
+
+				postItems.forEach((item) => {
+					const tags = item.dataset.tags?.split(',').filter(Boolean) || [];
+					const matches = !selectedTag || tags.includes(selectedTag);
+
+					if (matches) {
+						item.classList.remove('hidden');
+						visibleCount++;
+						const year = item.closest('.year-section')?.dataset.year;
+						if (year) visibleYears.add(year);
+					} else {
+						item.classList.add('hidden');
+					}
+				});
+
+				yearSections.forEach((section) => {
+					if (visibleYears.has(section.dataset.year)) {
+						section.classList.remove('hidden');
+					} else {
+						section.classList.add('hidden');
+					}
+				});
+
+				noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+				clearBtn.style.display = selectedTag ? 'inline-block' : 'none';
+
+				// Update active button
+				tagButtons.forEach((btn) => {
+					btn.classList.toggle('active', btn.dataset.tag === selectedTag);
+				});
+			}
+
+			tagButtons.forEach((btn) => {
+				btn.addEventListener('click', () => {
+					const tag = btn.dataset.tag;
+					selectedTag = selectedTag === tag ? null : tag;
+					filterPosts();
+				});
+			});
+
+			clearBtn.addEventListener('click', () => {
+				selectedTag = null;
+				filterPosts();
+			});
+		</script>
+	</body>
+</html>

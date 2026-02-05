@@ -8,11 +8,14 @@ const blog = defineCollection({
 	schema: ({ image }) =>
 		z.object({
 			title: z.string(),
-			description: z.string(),
+			description: z.string().optional(),
 			// Transform string to Date object
-			pubDate: z.coerce.date(),
+			pubDate: z.coerce.date().optional(),
 			updatedDate: z.coerce.date().optional(),
 			heroImage: image().optional(),
+				// Jekyll compatibility
+			tags: z.array(z.string()).optional(),
+			postId: z.string().optional(),
 		}),
 });
 

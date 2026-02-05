@@ -8,8 +8,33 @@ import Header from '../../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 
 const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+	(a, b) => (b.data.pubDate?.valueOf?.() ?? 0) - (a.data.pubDate?.valueOf?.() ?? 0),
 );
+
+const getDisplayDate = (post) => {
+	if (post.data.pubDate) return post.data.pubDate;
+	const match = post.id.match(/^(\d{4}-\d{2}-\d{2})/);
+	if (!match) return undefined;
+	const parsed = new Date(match[1]);
+	return Number.isNaN(parsed.valueOf()) ? undefined : parsed;
+};
+
+const getExcerpt = (post) => {
+	const body = post.body ?? '';
+	if (!body.includes('<!--more-->')) return '';
+	const raw = body.split('<!--more-->')[0] ?? '';
+	const text = raw
+		.replace(/```[\s\S]*?```/g, '')
+		.replace(/`[^`]*`/g, '')
+		.replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+		.replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+		.replace(/<[^>]+>/g, '')
+		.replace(/^[#>*\-]+\s*/gm, '')
+		.replace(/\n{2,}/g, '\n')
+		.replace(/\s+/g, ' ')
+		.trim();
+	return text;
+};
 ---
 
 <!doctype html>
@@ -18,37 +43,50 @@ const posts = (await getCollection('blog')).sort(
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 		<style>
 			main {
-				width: 960px;
+				width: var(--content-width);
+				max-width: var(--content-max-width);
 			}
 			ul {
-				display: flex;
-				flex-wrap: wrap;
+				display: grid;
+				grid-template-columns: 1fr;
 				gap: 2rem;
 				list-style-type: none;
 				margin: 0;
 				padding: 0;
 			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
 			ul li * {
 				text-decoration: none;
 				transition: 0.2s ease;
 			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
 			ul li img {
 				margin-bottom: 0.5rem;
 				border-radius: 12px;
+			}
+			.meta {
+				margin-top: 0.25rem;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 0.75rem;
+				color: rgb(var(--gray));
+				font-size: 0.85rem;
+			}
+			.meta .date {
+				margin: 0;
+				white-space: nowrap;
+			}
+			.tags {
+				margin: 0;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.4rem;
+			}
+			.tag {
+				padding: 0.15rem 0.5rem;
+				border-radius: 999px;
+				background: rgba(var(--gray-light), 0.4);
+				font-weight: bold;
+				font-size: 0.85rem;
 			}
 			ul li a {
 				display: block;
@@ -57,6 +95,13 @@ const posts = (await getCollection('blog')).sort(
 				margin: 0;
 				color: rgb(var(--black));
 				line-height: 1;
+				font-size: 1.5rem;
+			}
+			.excerpt {
+				margin: 0.5rem 0 0;
+				color: rgb(var(--gray));
+				font-size: 0.95rem;
+				line-height: 1.6;
 			}
 			.date {
 				margin: 0;
@@ -74,14 +119,7 @@ const posts = (await getCollection('blog')).sort(
 					gap: 0.5em;
 				}
 				ul li {
-					width: 100%;
 					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
 				}
 			}
 		</style>
@@ -92,16 +130,34 @@ const posts = (await getCollection('blog')).sort(
 			<section>
 				<ul>
 					{
-						posts.map((post) => (
+						posts
+							.filter((post) => post.data.postId)
+							.map((post) => (
 							<li>
-								<a href={`/blog/${post.id}/`}>
+								<a href={`/blog/${post.data.postId}.html`}>
 									{post.data.heroImage && (
 										<Image width={720} height={360} src={post.data.heroImage} alt="" />
 									)}
 									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
+									{getExcerpt(post) && <p class="excerpt">{getExcerpt(post)}</p>}
+									{(post.data.tags?.length > 0 || getDisplayDate(post)) && (
+										<div class="meta">
+											{post.data.tags?.length > 0 ? (
+												<div class="tags">
+													{post.data.tags.map((tag) => (
+														<span class="tag">#{tag}</span>
+													))}
+												</div>
+											) : (
+												<div />
+											)}
+											{getDisplayDate(post) && (
+												<p class="date">
+													<FormattedDate date={getDisplayDate(post)} />
+												</p>
+											)}
+										</div>
+									)}
 								</a>
 							</li>
 						))
