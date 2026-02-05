@@ -6,9 +6,18 @@ import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 
-type Props = CollectionEntry<'blog'>['data'];
+type Heading = {
+	depth: number;
+	slug: string;
+	text: string;
+};
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+type Props = CollectionEntry<'blog'>['data'] & {
+	headings?: Heading[];
+};
+
+const { title, description, pubDate, updatedDate, heroImage, tags, headings = [] } =
+	Astro.props as Props;
 ---
 
 <html lang="en">
@@ -20,6 +29,57 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				max-width: 100%;
 				margin: 0;
 			}
+			.content-area {
+				width: 100%;
+				max-width: var(--content-width);
+				margin: 0 auto;
+			}
+			.content-area.has-toc {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) minmax(180px, 240px);
+				column-gap: 2rem;
+				align-items: start;
+			}
+			.content-area.has-toc .prose {
+				margin: 0;
+			}
+			.toc {
+				position: sticky;
+				top: 5.5rem;
+				align-self: start;
+				max-height: calc(100vh - 7rem);
+				overflow: auto;
+				padding: 0.5rem 0;
+				border-left: 2px solid rgba(var(--gray-light), 0.9);
+				color: rgb(var(--gray));
+				font-size: 0.85rem;
+			}
+			.toc .toc-title {
+				font-weight: bold;
+				margin: 0 0 0.5rem 1rem;
+				color: rgb(var(--gray-dark));
+			}
+			.toc ol {
+				list-style: none;
+				margin: 0;
+				padding: 0 0 0 1rem;
+			}
+			.toc li {
+				margin: 0.35rem 0;
+			}
+			.toc li.depth-3 {
+				padding-left: 0.75rem;
+			}
+			.toc li.depth-4 {
+				padding-left: 1.5rem;
+			}
+			.toc a {
+				color: inherit;
+				text-decoration: none;
+			}
+			.toc a:hover {
+				color: var(--accent);
+			}
 			.hero-image {
 				width: 100%;
 			}
@@ -30,27 +90,68 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				box-shadow: var(--box-shadow);
 			}
 			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
+				width: var(--content-width);
+				max-width: var(--content-max-width);
 				margin: auto;
 				padding: 1em;
 				color: rgb(var(--gray-dark));
+				font-size: 1rem;
+			}
+			.prose :global(code) {
+				font-size: 0.75rem;
+			}
+			.prose :global(pre code) {
+				font-size: 0.75rem;
 			}
 			.title {
 				margin-bottom: 1em;
 				padding: 1em 0;
-				text-align: center;
 				line-height: 1;
 			}
 			.title h1 {
 				margin: 0 0 0.5em 0;
+				font-size: 1.9rem;
+				text-align: left;
 			}
-			.date {
+			.meta {
 				margin-bottom: 0.5em;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 0.75rem;
 				color: rgb(var(--gray));
+				font-size: 0.9rem;
+			}
+			.meta .date {
+				margin: 0;
+				white-space: nowrap;
 			}
 			.last-updated-on {
 				font-style: italic;
+			}
+			.tags {
+				margin: 0;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.4rem;
+			}
+			.tag {
+				padding: 0.15rem 0.5rem;
+				border-radius: 999px;
+				background: rgba(var(--gray-light), 0.4);
+			}
+			@media (max-width: 1024px) {
+				.content-area.has-toc {
+					grid-template-columns: minmax(160px, 200px) minmax(0, 1fr);
+				}
+			}
+			@media (max-width: 900px) {
+				.content-area.has-toc {
+					display: block;
+				}
+				.toc {
+					display: none;
+				}
 			}
 		</style>
 	</head>
@@ -62,22 +163,49 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				<div class="hero-image">
 					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
 				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
+				<div class={headings?.length ? 'content-area has-toc' : 'content-area'}>
+					<div class="prose">
+						<div class="title">
+							<h1>{title}</h1>
+							<div class="meta">
+								{tags?.length > 0 ? (
+									<div class="tags">
+										{tags.map((tag) => (
+											<span class="tag">#{tag}</span>
+										))}
 									</div>
-								)
-							}
+								) : (
+									<div />
+								)}
+								<div class="date">
+									<FormattedDate date={pubDate} />
+									{
+										updatedDate && (
+											<div class="last-updated-on">
+												Last updated on <FormattedDate date={updatedDate} />
+											</div>
+										)
+									}
+								</div>
+							</div>
+							<hr />
 						</div>
-						<h1>{title}</h1>
-						<hr />
+						<slot />
 					</div>
-					<slot />
+					{headings?.length ? (
+						<aside class="toc" aria-label="目录">
+							<div class="toc-title">目录</div>
+							<ol>
+								{headings
+									.filter((heading) => heading.depth >= 2 && heading.depth <= 4)
+									.map((heading) => (
+										<li class={`depth-${heading.depth}`}>
+											<a href={`#${heading.slug}`}>{heading.text}</a>
+										</li>
+									))}
+							</ol>
+						</aside>
+					) : null}
 				</div>
 			</article>
 		</main>
